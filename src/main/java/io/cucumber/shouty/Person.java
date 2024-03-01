@@ -3,20 +3,25 @@ package io.cucumber.shouty;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Person {
+public class Person {  
+    private final List<String> messagesHeard = new ArrayList<String>();
+    private final Network network;
 
-    public void moveTo(Integer distance) {
-        
+    public Person(Network network) {
+        this.network = network;
+        network.subscribe(this);
     }
 
     public void shout(String message) {
-        
+        network.broadcast(message);
     }
 
-    public List<String> getMessageHeard() {
-        List<String> result = new ArrayList<String>();
-        result.add("free bagels at Sean's");
-        return result;
+    public List<String> getMessagesHeard() {
+        return messagesHeard;
+    }
+
+    public void hear(String message) {
+        messagesHeard.add(message);
     }
 
 }

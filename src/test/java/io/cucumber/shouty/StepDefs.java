@@ -1,36 +1,41 @@
 package io.cucumber.shouty;
 
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
+
+import java.util.HashMap;
 
 public class StepDefs {
-    private Person lucy;
     private Person sean;
+    private Person lucy;
     private String messageFromSean;
+    private Network network;
+    private HashMap<String, Person> people;
 
-    public StepDefs() {
-        
+    @Before
+    public void createNetwork() {
+        network = new Network();
+        people = new HashMap<>();
     }
 
-    @Given("Lucy is located {int} meters from Sean")
-    public void lucy_is_located_meters_from_sean(Integer distance) {
-        lucy = new Person();
-        sean = new Person();
-        lucy.moveTo(distance);
+    @Given("a person named {word}")
+    public void a_person_named(String name) {
+        people.put(name, new Person(network));
     }
 
     @When("Sean shouts {string}")
-    public void sean_shouts(String message) {
-        sean.shout(message);
+    public void sean_shouts(String message) throws Throwable {
+        people.get("Sean").shout(message);
         messageFromSean = message;
     }
 
-    @Then("Lucy hears Sean's message")
-    public void lucy_hears_sean_s_message() {
-        assertEquals(asList(messageFromSean), lucy.getMessageHeard());
+    @Then("Lucy should hear Sean's message")
+    public void lucy_hears_Sean_s_message() throws Throwable {
+        assertEquals(asList(messageFromSean), people.get("Lucy").getMessagesHeard());
     }
 }
