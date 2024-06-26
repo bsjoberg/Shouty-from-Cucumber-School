@@ -11,8 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.HashMap;
 
 public class StepDefs {
-    private Person sean;
-    private Person lucy;
     private String messageFromSean;
     private Network network;
     private HashMap<String, Person> people;
