@@ -74,6 +74,12 @@ public class StepDefs {
         messageFromSean = message;
     }
 
+    @When("Sean shouts the following message")
+    public void sean_shouts_the_following_message(String message) {
+        people.get("Sean").shout(message);
+        messageFromSean = message;
+    }
+
     @Then("Lucy should hear a shout")
     public void lucy_should_hear_a_shout() throws Throwable {
         assertEquals(1, people.get("Lucy").getMessagesHeard().size());
