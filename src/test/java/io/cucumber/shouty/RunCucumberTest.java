@@ -11,8 +11,7 @@ import static io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME;
 @Suite
 @IncludeEngines("cucumber")
 @SelectPackages("io.cucumber.shouty")
-@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty")
-@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "junit:target/cucumber-reports/output.xml")
+@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty, junit:target/cucumber-reports/output.xml") 
 @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "io.cucumber.shouty")
 public class RunCucumberTest {
 }
