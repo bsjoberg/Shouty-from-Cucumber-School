@@ -79,9 +79,9 @@ public class StepDefs {
         assertEquals(1, people.get("Lucy").getMessagesHeard().size());
     }
    
-    @Then("Larry should not hear a shout")
-    public void larry_should_not_hear_a_shout() throws Throwable {
-        assertEquals(0, people.get("Larry").getMessagesHeard().size());
+    @Then("{word} should not hear a shout")
+    public void person_should_not_hear_a_shout(String name) throws Throwable {
+        assertEquals(0, people.get(name).getMessagesHeard().size());
     }
 
     @Then("Lucy should hear Sean's message")
