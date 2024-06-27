@@ -17,12 +17,18 @@ import java.util.Map;
 
 public class StepDefs {
     private String messageFromSean;
-    private Network network;
+    private static final int DEFAULT_RANGE = 100;
+    private Network network = new Network(DEFAULT_RANGE);
     private Map<String, Person> people;
 
     @Before
     public void createNetwork() {
         people = new HashMap<String, Person>();
+    }
+
+    @Given("a person named {word}") 
+    public void a_person_named(String name) throws Throwable {
+        people.put(name, new Person(network, 0));
     }
 
     @Given("the range is {int}")
