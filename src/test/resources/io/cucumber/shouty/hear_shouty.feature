@@ -14,14 +14,18 @@ Feature: Hear Shout
 
     Scenario: Listener is within range
       Given the range is 100
-      And a person named Sean is located at 0
-      And a person named Lucy is located at 50
+      And people located at
+        | name  | location |
+        | Sean  | 0        |
+        | Lucy  | 50       |
       When Sean shouts
       Then Lucy should hear a shout
 
     Scenario: Listener is out of range
       Given the range is 100
-      And a person named Sean is located at 0
-      And a person named Larry is located at 150
+      And people located at
+        | name  | location |
+        | Sean  | 0        |
+        | Larry | 150      |
       When Sean shouts
       Then Larry should not hear a shout
