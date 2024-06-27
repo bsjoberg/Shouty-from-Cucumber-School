@@ -1,15 +1,20 @@
 package io.cucumber.shouty;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
+import io.cucumber.java.DataTableType;
+import io.cucumber.java.Transpose;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.cucumber.java.it.Data;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.IsIterableContaining.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +25,21 @@ public class StepDefs {
     private static final int DEFAULT_RANGE = 100;
     private Network network = new Network(DEFAULT_RANGE);
     private Map<String, Person> people;
+
+    static class Whereabouts {
+        public String name;
+        public Integer location;
+
+        public Whereabouts(String name, int location) {
+            this.name = name;
+            this.location = location;
+        }
+    }
+
+    @DataTableType
+    public Whereabouts defineWhereabouts(Map<String, String> entry) {
+        return new Whereabouts(entry.get("name"), Integer.parseInt(entry.get("location")));
+    }
 
     @Before
     public void createNetwork() {
@@ -37,9 +57,9 @@ public class StepDefs {
     }
 
     @Given("people located at")
-    public void people_located_at(io.cucumber.datatable.DataTable dataTable) {
-        for (Map<String, String> personData : dataTable.asMaps()) {
-            people.put(personData.get("name"), new Person(network, Integer.parseInt(personData.get("location"))));
+    public void people_located_at(@Transpose List<Whereabouts> whereabouts) {
+        for (Whereabouts whereabout : whereabouts) {
+            people.put(whereabout.name, new Person(network, whereabout.location));
         }    
     }
 
@@ -73,5 +93,16 @@ public class StepDefs {
     public void larry_does_not_hear_Sean_s_message() throws Throwable {
         List<String> heardByLarry = people.get("Larry").getMessagesHeard();
         assertThat(heardByLarry, not(hasItem(messageFromSean)));
+    }
+
+    @Then("Lucy hears the following messages:")
+    public void lucy_hears_the_following_messages(io.cucumber.datatable.DataTable expectedMessages) {
+        List<List<String>> actualMessages = new ArrayList<List<String>>();
+        List<String> heard = people.get("Lucy").getMessagesHeard();
+        for (String message : heard) {
+            actualMessages.add(Collections.singletonList(message));
+        }
+
+        expectedMessages.diff(DataTable.create(actualMessages));
     }
 }
