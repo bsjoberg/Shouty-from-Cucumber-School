@@ -36,11 +36,6 @@ public class StepDefs {
         network = new Network(range);
     }
 
-    @Given("a person named {word} is located at {int}")
-    public void a_person_named_is_located(String name, int location) throws Throwable {
-        people.put(name, new Person(network, location));
-    }
-
     @Given("people located at")
     public void people_located_at(io.cucumber.datatable.DataTable dataTable) {
         for (Map<String, String> personData : dataTable.asMaps()) {
