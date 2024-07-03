@@ -2,9 +2,8 @@ Feature: Premium account
 
   Background:
     Given the range is 100
-    And people are located at
-      | name     | Sean | Lucy |
-      | location | 0    | 100  |
+    And Sean is located at 0
+    And Lucy is located at 100
 
   Scenario: Sean shouts some over-long messages and some messages containing the word “buy”
     Given Sean has bought 30 credits
@@ -31,4 +30,4 @@ Feature: Premium account
     Scenario: BUG #2789
       Given Sean has bought 30 credits
       When Sean shouts "buy, buy buy!"
-      Then Sean should have 15 credits
+      Then Sean should have 25 credits

@@ -6,10 +6,12 @@ import java.util.List;
 public class Person {  
     private final List<String> messagesHeard = new ArrayList<String>();
     private final Network network;
-    private final int location;
+    private int location;
     private int credits;
+    private String name;
 
-    public Person(Network network, int location) {
+    public Person(String name, Network network, int location) {
+        this.name = name;
         this.network = network;
         this.location = location;
         this.credits = 0;
@@ -38,5 +40,10 @@ public class Person {
 
     public int getCredits() {
         return credits;
+    }
+
+    public Person moveTo(int newLocation) {
+        this.location = newLocation;
+        return this;
     }
 }
