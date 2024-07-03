@@ -62,64 +62,6 @@ public class StepDefs {
         world.people.get("Sean").setCredits(credits);
     }
 
-    @When("Sean shouts")
-    public void sean_shouts() throws Throwable {
-        shout("Hello, world");
-    }
-
-    @When("Sean shouts {string}")
-    public void sean_shouts_message(String message) throws Throwable {
-        shout(message);
-    }
-
-    @When("Sean shouts {int} messages containing the word {string}")
-    public void sean_shouts_messages_containing_the_word(int count, String word) throws Throwable {
-        String message = "a message containing the word " + word;
-        for (int i = 0; i < count; i++) {
-            shout(message);
-        }
-    }
-
-    @When("Sean shouts the following message")
-    public void sean_shouts_the_following_message(String message) throws Throwable {
-        shout(message);
-    }
-
-    @When("Sean shouts a message")
-    public void sean_shouts_a_message() throws Throwable {
-        shout("here is a message");
-    }
-
-    @When("Sean shouts a long message")
-    public void sean_shouts_a_long_message() throws Throwable {
-        String longMessage = String.join(
-                "\n",
-                "A message from Sean",
-                "that spans multiple lines");
-        shout(longMessage);
-    }
-
-    @When("Sean shouts {int} over-long messages")
-    public void sean_shouts_some_over_long_messages(int count) throws Throwable {
-        String baseMessage = "A message from Sean that is 181 characters long ";
-        String padding = "x";
-        String overlongMessage = baseMessage + padding.repeat(181 - baseMessage.length());
-
-        for (int i = 0; i < count; i++) {
-            shout(overlongMessage);
-        }
-    }
-
-    private void shout(String message) {
-        world.people.get("Sean").shout(message);
-        List<String> messages = world.messagesShoutedBy.get("Sean");
-        if (messages == null) {
-            messages = new ArrayList<String>();
-            world.messagesShoutedBy.put("Sean", messages);
-        }
-        messages.add(message);
-    }
-
     @Then("Lucy should hear Sean's message")
     public void lucy_hears_Sean_s_message() throws Throwable {
         List<String> messages = world.messagesShoutedBy.get("Sean");
