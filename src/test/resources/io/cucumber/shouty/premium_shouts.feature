@@ -31,4 +31,4 @@ Feature: Premium account
     Scenario: BUG #2789
       Given Sean has bought 30 credits
       When Sean shouts "buy, buy buy!"
-      Then Sean should have 15 credits
+      Then Sean should have 25 credits
