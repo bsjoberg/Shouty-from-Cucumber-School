@@ -7,6 +7,7 @@ import io.cucumber.java.Transpose;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.cucumber.shouty.support.ShoutyWorld;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.hamcrest.core.IsIterableContaining.hasItems;
@@ -25,11 +26,6 @@ public class StepDefs {
         this.world = world;
     }
 
-
-    private Map<String, Person> people;
-    private Map<String, List<String>> messagesShoutedBy;
-
-
     static class Whereabouts {
         public String name;
         public Integer location;
@@ -45,11 +41,6 @@ public class StepDefs {
         return new Whereabouts(entry.get("name"), Integer.parseInt(entry.get("location")));
     }
 
-    @Before
-    public void createNetwork() {
-        people = new HashMap<String, Person>();
-        messagesShoutedBy = new HashMap<String, List<String>>();
-    }
 
     @Given("the range is {int}")
     public void the_range_is(int range) throws Throwable {
@@ -58,19 +49,17 @@ public class StepDefs {
 
     @Given("a person named {word}")
     public void a_person_named(String name) throws Throwable {
-        people.put(name, new Person(world.network, 0));
+        world.people.put(name, new Person(name, world.network, 0));
     }
 
-    @Given("people are located at")
-    public void people_are_located_at(@Transpose List<Whereabouts> whereabouts) {
-        for (Whereabouts whereabout : whereabouts ) {
-            people.put(whereabout.name, new Person(world.network, whereabout.location));
-        }
+    @Given("{person} is located at {int}")
+    public void person_is_located_at(Person person, Integer location) {
+        person.moveTo(location);
     }
 
     @Given("Sean has bought {int} credits")
     public void sean_has_bought_credits(int credits) {
-        people.get("Sean").setCredits(credits);
+        world.people.get("Sean").setCredits(credits);
     }
 
     @When("Sean shouts")
@@ -122,35 +111,35 @@ public class StepDefs {
     }
 
     private void shout(String message) {
-        people.get("Sean").shout(message);
-        List<String> messages = messagesShoutedBy.get("Sean");
+        world.people.get("Sean").shout(message);
+        List<String> messages = world.messagesShoutedBy.get("Sean");
         if (messages == null) {
             messages = new ArrayList<String>();
-            messagesShoutedBy.put("Sean", messages);
+            world.messagesShoutedBy.put("Sean", messages);
         }
         messages.add(message);
     }
 
     @Then("Lucy should hear Sean's message")
     public void lucy_hears_Sean_s_message() throws Throwable {
-        List<String> messages = messagesShoutedBy.get("Sean");
-        assertEquals(messages, people.get("Lucy").getMessagesHeard());
+        List<String> messages = world.messagesShoutedBy.get("Sean");
+        assertEquals(messages, world.people.get("Lucy").getMessagesHeard());
     }
 
     @Then("Lucy should hear a shout")
     public void lucy_should_hear_a_shout() throws Throwable {
-        assertEquals(1, people.get("Lucy").getMessagesHeard().size());
+        assertEquals(1, world.people.get("Lucy").getMessagesHeard().size());
     }
 
     @Then("{word} should not hear a shout")
     public void person_should_not_hear_a_shout(String name) throws Throwable {
-        assertEquals(0, people.get(name).getMessagesHeard().size());
+        assertEquals(0, world.people.get(name).getMessagesHeard().size());
     }
 
     @Then("Lucy hears the following messages:")
     public void lucy_hears_the_following_messages(DataTable expectedMessages) {
         List<List<String>> actualMessages = new ArrayList<List<String>>();
-        List<String> heard = people.get("Lucy").getMessagesHeard();
+        List<String> heard = world.people.get("Lucy").getMessagesHeard();
         for (String message : heard) {
             actualMessages.add(Collections.singletonList(message));
         }
@@ -159,8 +148,8 @@ public class StepDefs {
 
     @Then("Lucy hears all Sean's messages")
     public void lucy_hears_all_Sean_s_messages() throws Throwable {
-        List<String> heardByLucy = people.get("Lucy").getMessagesHeard();
-        List<String> messagesFromSean = messagesShoutedBy.get("Sean");
+        List<String> heardByLucy = world.people.get("Lucy").getMessagesHeard();
+        List<String> messagesFromSean = world.messagesShoutedBy.get("Sean");
 
         // Hamcrest's hasItems matcher wants an Array, not a List.
         String[] messagesFromSeanArray = messagesFromSean.toArray(new String[messagesFromSean.size()]);
@@ -169,6 +158,6 @@ public class StepDefs {
 
     @Then("Sean should have {int} credits")
     public void sean_should_have_credits(int expectedCredits) {
-        assertEquals(expectedCredits, people.get("Sean").getCredits());
+        assertEquals(expectedCredits, world.people.get("Sean").getCredits());
     }
 }
