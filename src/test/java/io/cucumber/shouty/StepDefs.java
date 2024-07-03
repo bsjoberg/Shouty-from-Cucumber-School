@@ -9,8 +9,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.core.IsIterableContaining.hasItem;
 import static org.hamcrest.core.IsIterableContaining.hasItems;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -21,8 +19,13 @@ import java.util.List;
 import java.util.Map;
 
 public class StepDefs {
-    private static final int DEFAULT_RANGE = 100;
-    private Network network = new Network(DEFAULT_RANGE);
+    private final ShoutyWorld world;
+
+    public StepDefs(ShoutyWorld world) {
+        this.world = world;
+    }
+
+
     private Map<String, Person> people;
     private Map<String, List<String>> messagesShoutedBy;
 
@@ -50,18 +53,18 @@ public class StepDefs {
 
     @Given("the range is {int}")
     public void the_range_is(int range) throws Throwable {
-        network = new Network(range);
+        world.network = new Network(range);
     }
 
     @Given("a person named {word}")
     public void a_person_named(String name) throws Throwable {
-        people.put(name, new Person(network, 0));
+        people.put(name, new Person(world.network, 0));
     }
 
     @Given("people are located at")
     public void people_are_located_at(@Transpose List<Whereabouts> whereabouts) {
         for (Whereabouts whereabout : whereabouts ) {
-            people.put(whereabout.name, new Person(network, whereabout.location));
+            people.put(whereabout.name, new Person(world.network, whereabout.location));
         }
     }
 
