@@ -7,7 +7,7 @@ public class Person {
     private final List<String> messagesHeard = new ArrayList<String>();
     private final Network network;
     private int location;
-    private int credits;
+    public int credits;
     private String name;
 
     public Person(String name, Network network, int location) {
@@ -15,6 +15,14 @@ public class Person {
         this.network = network;
         this.location = location;
         this.credits = 0;
+        network.subscribe(this);
+    }
+
+    public Person(String name, Network network, int location, int credits) {
+        this.name = name;
+        this.network = network;
+        this.location = location;
+        this.credits = credits;
         network.subscribe(this);
     }
 
