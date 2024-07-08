@@ -1,5 +1,6 @@
 package io.cucumber.shouty;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -59,5 +60,31 @@ public class NetworkTest {
         network.broadcast(longMessage, sean);
 
         verify(laura, never()).hear(longMessage);
+    }
+
+    @Test
+    public void deducts_5_credits_for_mentioning_the_word_buy() {
+        String message = "Come buy these awesome croissants";
+
+        Person sean = new Person("Sean", network, 0, 100);
+        Person laura = new Person("Laura", network, 0, 10);
+
+        network.subscribe(laura);
+        network.broadcast(message, sean);
+
+        assertEquals(95, sean.credits);
+    }
+
+    @Test
+    public void deducts_5_credits_for_mentioning_the_word_buy_several_times() {
+        String message = "Come buy buy buy these awesome croissants";
+
+        Person sean = new Person("Sean", network, 0, 100);
+        Person laura = new Person("Laura", network, 0, 10);
+
+        network.subscribe(laura);
+        network.broadcast(message, sean);
+
+        assertEquals(95, sean.credits);
     }
 }
